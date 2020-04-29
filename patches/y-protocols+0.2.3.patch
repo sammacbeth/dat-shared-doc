@@ -1,0 +1,14 @@
+diff --git a/node_modules/y-protocols/package.json b/node_modules/y-protocols/package.json
+index 6e5879a..5a95c47 100644
+--- a/node_modules/y-protocols/package.json
++++ b/node_modules/y-protocols/package.json
+@@ -53,6 +55,9 @@
+   ],
+   "license": "MIT",
+   "name": "y-protocols",
++  "main": "dist/awareness.cjs",
++  "module": "./awareness.js",
++  "types": "./awareness.d.ts",
+   "peerDependenies": {
+     "yjs": "^13.0.0"
+   },

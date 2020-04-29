@@ -1,0 +1,13 @@
+diff --git a/node_modules/lib0/package.json b/node_modules/lib0/package.json
+index 7bbfd03..7c37d22 100644
+--- a/node_modules/lib0/package.json
++++ b/node_modules/lib0/package.json
+@@ -51,7 +53,7 @@
+   },
+   "homepage": "https://github.com/dmonad/lib0#readme",
+   "license": "MIT",
+-  "main": "./index.js",
++  "main": "./dist/index.cjs",
+   "module": "./index.js",
+   "name": "lib0",
+   "repository": {
