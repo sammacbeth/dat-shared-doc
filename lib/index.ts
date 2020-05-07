@@ -65,13 +65,6 @@ export class DatYDoc {
       }
       this.discoveryKey = this.multicore.discoveryKey;
       if (!this.isAdmin && !this.writable) {
-        const requestWriter = () => {
-          this.announceTimer = null;
-          if (!this.writable && opts.announceFeeds) {
-            this.feedAnnouncer.announce();
-            this.announceTimer = setTimeout(requestWriter, 5000);
-          }
-        };
         this.multicore.on("writer", (type) => {
           if (type === METADATA_NAME && !this.writable) {
             this.multicore.authorise(
@@ -80,7 +73,9 @@ export class DatYDoc {
             );
           }
         });
-        requestWriter();
+        if (opts.announceFeeds) {
+          this.feedAnnouncer.enable();
+        }
       }
       resolve();
     });

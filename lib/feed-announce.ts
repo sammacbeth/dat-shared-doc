@@ -15,7 +15,7 @@ export default class FeedAnnounceExtension extends EventEmitter {
     this.ext = multicore.rootFeed.registerExtension("feed-announce", {
       encoding: "json",
       onmessage: function (message: any, peer: any) {
-        self.emit("feeds", message);
+        self.emit("feeds", message, peer);
       },
       onerror: function (err: Error) {
         console.warn("Feed announce error", err);
@@ -23,12 +23,13 @@ export default class FeedAnnounceExtension extends EventEmitter {
     });
   }
 
-  announce() {
-    const msg = {};
-    Object.keys(this.multicore.handlers).forEach((kind) => {
-      msg[kind] = this.multicore.handlers[kind].defaultFeed.key.toString("hex");
-    });
-    console.log('announce', msg);
-    this.ext.broadcast(msg);
+  enable() {
+    this.multicore.rootFeed.on('peer-open', (peer) => {
+      const msg = {};
+      Object.keys(this.multicore.handlers).forEach((kind) => {
+        msg[kind] = this.multicore.handlers[kind].defaultFeed.key.toString("hex");
+      });
+      this.ext.send(msg, peer);
+    })
   }
 }
