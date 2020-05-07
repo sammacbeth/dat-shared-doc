@@ -1,6 +1,6 @@
 {
   "name": "@sammacbeth/dat-shared-doc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Yjs Shared types on Dat",
   "main": "build/cjs/index.js",
   "module": "build/es6/index.js",
