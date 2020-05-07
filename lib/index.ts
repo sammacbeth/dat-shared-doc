@@ -4,12 +4,14 @@ import FeedAnnounceExtension from "./feed-announce";
 import { Multicore, METADATA_NAME } from "./multicore";
 import YDocHandler from "./ydoc";
 import AwarenessExtension from "./awareness";
+import FeedBootstrapExtension from "./bootstrap";
 
 const DOC_NAME = 'ydoc';
 
 export type Options = {
   announceFeeds?: boolean;
   awareness?: boolean;
+  bootstrapEnabled?: boolean;
   policy: "GRANT_ALL_ADMIN" | "GRANT_ALL_WRITER" | "GRANT_NONE";
 };
 
@@ -27,6 +29,7 @@ export class DatYDoc {
   doc: Doc;
 
   feedAnnouncer: FeedAnnounceExtension;
+  feedBootstrapper: FeedBootstrapExtension;
   awareness: AwarenessExtension;
   announceTimer: NodeJS.Timeout;
 
@@ -95,6 +98,9 @@ export class DatYDoc {
     }
     if (opts.awareness) {
       this.awareness = new AwarenessExtension(this.multicore.metadataHandler.doc, this.multicore);
+    }
+    if (opts.bootstrapEnabled) {
+      this.feedBootstrapper = new FeedBootstrapExtension(this.multicore);
     }
   }
 
