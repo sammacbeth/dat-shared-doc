@@ -28,7 +28,6 @@ describe("multicore", () => {
       "40fb7c496f12c420f53c6ba3cf3af06566f27886a1153365d7c99937c34bcb2e";
     const store = await initStore();
     const core = new Multicore(Buffer.from(addr, "hex"), store);
-    await core.ready(core.metadataHandler.kind);
     expect(core.isAdmin).to.be.false;
     expect(core.isWriter(core.metadataHandler.kind)).to.be.false;
   });

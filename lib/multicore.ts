@@ -129,9 +129,12 @@ export class Multicore extends EventEmitter {
     handler.defaultFeed = this.getFeed(handler.kind);
   }
 
-  loadFeed(kind: string, key: string): Promise<void> {
+  loadFeed(kind: string, key: string, toIndex: number = 0): Promise<void> {
     if (!this.handlers[kind]) {
       throw new Error(`no handler found for feed of type ${kind}`);
+    }
+    if (this.activeFeeds.has(key)) {
+      return;
     }
     const handler = this.handlers[kind];
     const feed = this.store.namespace(kind).get({
@@ -153,9 +156,19 @@ export class Multicore extends EventEmitter {
           this.discoveryKey = feed.discoveryKey;
           if (feed.writable && feed.length === 0) {
             this.metadata.addFeed(METADATA_NAME, key);
+          } else {
+            // no writable root key - wait for at least 1 feed entry
+            toIndex = 1;
           }
         }
-        resolve(this._onAppend(kind, key, feed));
+        const get = this._onAppend(kind, key, feed)
+        if (toIndex > 0) {
+          feed.update(toIndex, () => {
+            resolve(get)
+          })
+        } else {
+          resolve(get);
+        }
       });
       feed.on("append", () => this._onAppend(kind, key, feed));
     });

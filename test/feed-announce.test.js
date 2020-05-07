@@ -21,7 +21,6 @@ async function createPeers(opts) {
     opts
   );
   await d1.ready;
-  await d2.ready;
   const repl1 = d1.store.replicate(true, { live: true });
   pump(repl1, d2.store.replicate(false, { live: true }), repl1);
   return {
@@ -34,7 +33,6 @@ describe("feed announce", () => {
   it("GRANT_ALL_ADMIN adds metadata writer", async () => {
     const opts = { announceFeeds: true, policy: "GRANT_ALL_ADMIN" };
     const { d1, d2 } = await createPeers(opts);
-
     return new Promise((resolve, reject) => {
       d2.multicore.once("writer", (kind) => {
         if (kind === "metadata") {

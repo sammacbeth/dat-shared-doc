@@ -33,3 +33,8 @@ interface Corestore extends EventEmitter {
 interface NamedspacedCorestore extends Corestore {
   name: string;
 }
+
+interface HypercoreProtocolExtension {
+  send(message, peer): void;
+  broadcast(message): void;
+}

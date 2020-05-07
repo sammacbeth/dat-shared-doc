@@ -38,7 +38,6 @@ describe('shared doc', () => {
       const doc = await loadInMemory(addr);
       expect(doc.key).to.have.length(32);
       expect(doc.key.toString("hex")).to.equal(addr);
-      await doc.ready;
       expect(doc.writable).to.be.false;
       expect(doc.isAdmin).to.be.false;
       await doc.close();
@@ -63,13 +62,13 @@ describe('shared doc', () => {
       const d1 = await createInMemory();
       const d2 = await loadInMemory(d1.key.toString("hex"));
       await d1.ready;
-      await d2.ready;
 
       d1.doc.transact(() => {
         d1.doc.getText("test").insert(0, "hello");
       });
       const repl1 = d1.store.replicate(true, { live: true });
       pump(repl1, d2.store.replicate(false, { live: true }), repl1);
+      await d2.ready;
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const text = d1.doc.getText("test");

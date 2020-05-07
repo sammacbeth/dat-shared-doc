@@ -1,13 +1,9 @@
 import { EventEmitter } from "events";
 import { Multicore } from "./multicore";
-
-interface Extension {
-  send(message, peer): void;
-  broadcast(message): void;
-}
+import { HypercoreProtocolExtension } from "./types";
 
 export default class FeedAnnounceExtension extends EventEmitter {
-  ext: Extension;
+  ext: HypercoreProtocolExtension;
 
   constructor(private multicore: Multicore) {
     super();
@@ -23,13 +19,18 @@ export default class FeedAnnounceExtension extends EventEmitter {
     });
   }
 
+  getAnnounceMessage() {
+    const msg = {};
+    Object.keys(this.multicore.handlers).forEach((kind) => {
+      msg[kind] = this.multicore.handlers[kind].defaultFeed.key.toString("hex");
+    });
+    return msg;
+  }
+
   enable() {
     this.multicore.rootFeed.on('peer-open', (peer) => {
-      const msg = {};
-      Object.keys(this.multicore.handlers).forEach((kind) => {
-        msg[kind] = this.multicore.handlers[kind].defaultFeed.key.toString("hex");
-      });
-      this.ext.send(msg, peer);
+      this.ext.send(this.getAnnounceMessage(), peer);
     })
+    this.ext.broadcast(this.getAnnounceMessage());
   }
 }

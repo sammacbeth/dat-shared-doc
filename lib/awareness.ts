@@ -1,5 +1,4 @@
 import { encoding, decoding } from "lib0";
-import { Multicore } from "./multicore";
 import { Doc } from "yjs";
 import {
   Awareness,
@@ -7,11 +6,14 @@ import {
   applyAwarenessUpdate,
 } from "y-protocols";
 
+import { Multicore } from "./multicore";
+import { HypercoreProtocolExtension } from "./types";
+
 const messageQueryAwareness = 3;
 const messageAwareness = 1;
 
 export default class AwarenessExtension {
-  ext: any;
+  ext: HypercoreProtocolExtension;
 
   constructor(
     doc: Doc,
@@ -39,7 +41,11 @@ export default class AwarenessExtension {
             sendReply = true;
             break;
           case messageAwareness:
-            applyAwarenessUpdate(awareness, decoding.readVarUint8Array(decoder), this);
+            applyAwarenessUpdate(
+              awareness,
+              decoding.readVarUint8Array(decoder),
+              this
+            );
             break;
         }
         if (sendReply) {
