@@ -17,7 +17,8 @@ export default class YDocHandler implements FeedHandler {
     this.kind = docName;
     this.doc = new Doc(docOptions);
     this.doc.on("update", (update, origin) => {
-      if (origin === null) {
+      const isFeedOrigin = typeof origin === "string" && origin.length === 64;
+      if (!isFeedOrigin) {
         // console.log("local update", update);
         this.defaultFeed.append(Buffer.from(update));
       }
